@@ -23,27 +23,6 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
 
     this.canvas = new fabric.Canvas('canvas');
-    this.canvas.on('mouse:down', opt => {
-      const evt = opt.e;
-      if (evt.altKey) {
-        this.isDragging = true;
-        this.selection = false;
-        this.lastPosX = evt.clientX;
-        this.lastPosY = evt.clientY;
-      }
-    });
-    this.canvas.on('mouse:move', opt => {
-      if(this.isDragging) {
-        let e = opt.e;
-        this.viewportTransform[4] += e.clientX - this.lastPosX;
-        this.viewportTransform[5] += e.clientY - this.lastPosY;
-        this.requestRenderAll();
-        this.lastPosX = e.clientX;
-        this.lastPosY = e.clientY;
-
-      }
-    })
-
     
   }
   add_rect() {
