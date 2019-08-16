@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { flushModuleScopingQueueAsMuchAsPossible } from '@angular/core/src/render3/jit/module';
+import * as mapJson from '../../assets/map.json';
 
 declare const fabric;
 
@@ -23,6 +23,8 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
 
     this.canvas = new fabric.Canvas('canvas');
+    console.log(mapJson.default);
+    this.canvas.loadFromJSON(mapJson.default);
     
   }
   add_rect() {
@@ -105,6 +107,9 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
     let entry1 = this.canvas.getObjects().find(x => x.id === "Entry: 1");
     console.log(entry1);
     entry1.setSrc('/assets/barrier1.png', this.canvas.renderAll.bind(this.canvas));
+  }
+  serialize() {
+    console.log(JSON.stringify(this.canvas));
   }
 
   
