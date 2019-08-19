@@ -15,11 +15,10 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
 
   lastPosX: number;
   lastPosY: number;
-  zoom: number;
-  flip: boolean;
+  zoom: number;  
   i = 0;
   clipboard: any;
-  
+
 
   constructor() { }
 
@@ -33,7 +32,7 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
     // zooming
     this.canvas.on('mouse:wheel', opt => {
       const delta = opt.e.deltaY;
-      let zoom = this.canvas.getZoom() + delta / 800;
+      let zoom = this.canvas.getZoom() + delta / 200;
       if (zoom > 20) {
         zoom = 20;
       } else if (zoom < 0.01) {
@@ -93,9 +92,7 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
   add_entry() {
     fabric.Image.fromURL('/assets/barrier.png', img => {
       this.canvas.add(img);
-      this.flip = !this.flip;
       img.set('id', `Entry: ${this.nextEntry}`);
-      img.set('flipX', this.flip);
       img.scale(0.3);
       img.on('selected', _ => {
         console.log(this.canvas.getActiveObject().id);
@@ -115,7 +112,9 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
     });
   }
   add_background() {
-    fabric.Image.fromURL('/assets/airportmap.png', img => {
+    //const imgUrl = 'https://publicsafety.tufts.edu/parking/files/Parking-Map-2018-734x567.jpg';
+    const imgUrl = '/assets/airportmap.png';
+    fabric.Image.fromURL(imgUrl, img => {
       this.canvas.setBackgroundImage(img, this.canvas.renderAll.bind(this.canvas), {
         originX: 'left',
         originY: 'top',
@@ -148,8 +147,8 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
     console.log('serializing');
     console.log(JSON.stringify(this.canvas));
   }
-  to_default_view() {    
-    this.canvas.setViewportTransform([1,0,0,1,0,0]);;
+  to_default_view() {
+    this.canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);;
   }
   copy() {
     this.canvas.getActiveObject().clone(clone => {
@@ -164,7 +163,7 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
         top: clone.top + 10,
         evented: true
       });
-      if(clone.type === 'activeSelection') {
+      if (clone.type === 'activeSelection') {
         clone.canvas = this.canvas;
         clone.forEachObject(obj => {
           this.canvas.add(obj);
@@ -179,9 +178,23 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
       this.canvas.requestRenderAll();
     });
 
-  }
-  
+    
+  } 
+  // transformmatrix examples
+    // http://www.senocular.com/flash/tutorials/transformmatrix/
+    // | a  b  u |
+    // | c  d  v |
+    // | tx ty w |
+    // a..x-scale, b..y-skew, c..x-skew d..y scale
+    // transformMatrix = [a,b,c,d,tx,ty] = [x-scale,y-skew,x-skew,y-scale,tx,ty]
+    transform() {
+      const obj = this.canvas.getActiveObject();
+      if (!obj) {
+        return;
+      }
+      obj.transformMatrix = [1, 0, -1.0, 1, 0, 0];
+      this.canvas.requestRenderAll();
 
 
-
+    } 
 }
