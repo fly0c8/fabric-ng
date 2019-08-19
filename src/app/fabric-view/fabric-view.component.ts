@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import * as mapJson from '../../assets/map.json';
+import mapJson from '../../assets/map.json';
 
 declare const fabric;
 
@@ -23,8 +23,8 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
 
     this.canvas = new fabric.Canvas('canvas');
-    console.log(mapJson.default);
-    this.canvas.loadFromJSON(mapJson.default);
+    console.log(mapJson);
+    this.canvas.loadFromJSON(mapJson);
     
   }
   add_rect() {
