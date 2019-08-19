@@ -32,13 +32,21 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
     // zooming
     this.canvas.on('mouse:wheel', opt => {
       const delta = opt.e.deltaY;
-      let zoom = this.canvas.getZoom() + delta / 200;
+      
+      console.log(opt.e);
+      let zoom = this.canvas.getZoom() + delta / 800;
+      
       if (zoom > 20) {
         zoom = 20;
       } else if (zoom < 0.01) {
         zoom = 0.01;
       }
-      this.canvas.setZoom(zoom);
+      
+      // this.canvas.setZoom(zoom);
+      this.canvas.zoomToPoint({
+        x: opt.e.offsetX, 
+        y: opt.e.offsetY
+      }, zoom);
       opt.e.preventDefault();
       opt.e.stopPropagation();
     });
