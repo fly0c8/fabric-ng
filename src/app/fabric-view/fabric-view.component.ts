@@ -15,7 +15,7 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
 
   lastPosX: number;
   lastPosY: number;
-  zoom: number;  
+  zoom: number;
   i = 0;
   clipboard: any;
 
@@ -32,19 +32,19 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
     // zooming
     this.canvas.on('mouse:wheel', opt => {
       const delta = opt.e.deltaY;
-      
+
       console.log(opt.e);
       let zoom = this.canvas.getZoom() + delta / 800;
-      
+
       if (zoom > 20) {
         zoom = 20;
       } else if (zoom < 0.01) {
         zoom = 0.01;
       }
-      
+
       // this.canvas.setZoom(zoom);
       this.canvas.zoomToPoint({
-        x: opt.e.offsetX, 
+        x: opt.e.offsetX,
         y: opt.e.offsetY
       }, zoom);
       opt.e.preventDefault();
@@ -80,7 +80,13 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
         o.setCoords();
       });
     });
-    console.log(this.canvas.getZoom());
+
+    // hovering
+    this.canvas.on('mouse:over', e => {
+      console.log(e.target);
+      e.target.set('fill', 'green')
+    });
+
 
   }
   add_rect() {
@@ -101,11 +107,23 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
     fabric.Image.fromURL('/assets/barrier.png', img => {
       this.canvas.add(img);
       img.set('id', `Entry: ${this.nextEntry}`);
-      img.scale(0.3);
+      
       img.on('selected', _ => {
         console.log(this.canvas.getActiveObject().id);
       });
     });
+  }
+  changeImg() {
+
+    let img = this.canvas.getActiveObject();    
+    img.setSrc('/assets/barrier_open.png', () => this.canvas.renderAll());
+    // img.onload = () => {
+    //   this.canvas.renderAll();
+    // }
+    
+
+    
+    
   }
   add_text() {
     const text = new fabric.IText('Entry 1', { left: 100, top: 100 });
@@ -186,23 +204,24 @@ export class FabricViewComponent implements OnInit, AfterViewInit {
       this.canvas.requestRenderAll();
     });
 
-    
-  } 
+
+  }
   // transformmatrix examples
-    // http://www.senocular.com/flash/tutorials/transformmatrix/
-    // | a  b  u |
-    // | c  d  v |
-    // | tx ty w |
-    // a..x-scale, b..y-skew, c..x-skew d..y scale
-    // transformMatrix = [a,b,c,d,tx,ty] = [x-scale,y-skew,x-skew,y-scale,tx,ty]
-    transform() {
-      const obj = this.canvas.getActiveObject();
-      if (!obj) {
-        return;
-      }
-      obj.transformMatrix = [1, 0, -1.0, 1, 0, 0];
-      this.canvas.requestRenderAll();
+  // http://www.senocular.com/flash/tutorials/transformmatrix/
+  // | a  b  u |
+  // | c  d  v |
+  // | tx ty w |
+  // a..x-scale, b..y-skew, c..x-skew d..y scale
+  // transformMatrix = [a,b,c,d,tx,ty] = [x-scale,y-skew,x-skew,y-scale,tx,ty]
+  transform() {
+    const obj = this.canvas.getActiveObject();
+    if (!obj) {
+      return;
+    }
+    obj.transformMatrix = [1, 0, -1.0, 1, 0, 0];
+    this.canvas.requestRenderAll();
 
 
-    } 
+  }
+  
 }
